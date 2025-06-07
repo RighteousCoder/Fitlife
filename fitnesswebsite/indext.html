@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitTrack - Fitness Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <div class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <h1>FitLife</h1>
+            </div>
+            <div class="user-actions">
+                <div class="notification">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">JD</div>
+                    <div>
+                        <div class="user-name">Righteousness</div>
+                        <div class="user-level">Pro Member</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-heartbeat"></i> Activity</a></li>
+                <li><a href="#"><i class="fas fa-running"></i> Workouts</a></li>
+                <li><a href="#"><i class="fas fa-utensils"></i> Nutrition</a></li>
+                <li><a href="#"><i class="fas fa-weight"></i> Body Stats</a></li>
+                <li><a href="achievement.html"><i class="fas fa-trophy"></i> Achievements</a></li>
+                <li><a href="setting.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <i class="fas fa-fire icon-calories"></i>
+                    <div class="stat-value">1,850</div>
+                    <div class="stat-label">Calories Burned</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-shoe-prints icon-steps"></i>
+                    <div class="stat-value">12,548</div>
+                    <div class="stat-label">Steps Today</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-heartbeat icon-heart"></i>
+                    <div class="stat-value">128 bpm</div>
+                    <div class="stat-label">Avg Heart Rate</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-bed icon-sleep"></i>
+                    <div class="stat-value">7h 22m</div>
+                    <div class="stat-label">Sleep Last Night</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Weekly Activity</h2>
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <div class="chart-container" id="activity-chart">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Heart Rate</h2>
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <div class="chart-container" id="heart-rate-chart">
+                    <canvas id="heartRateChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card workout-history">
+                <div class="card-header">
+                    <h2>Recent Workouts</h2>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Workout</th>
+                            <th>Type</th>
+                            <th>Duration</th>
+                            <th>Calories</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Morning Run</td>
+                            <td><span class="workout-type type-cardio">Cardio</span></td>
+                            <td>45 min</td>
+                            <td>420 kcal</td>
+                            <td>Today, 7:30 AM</td>
+                        </tr>
+                        <tr>
+                            <td>Chest & Triceps</td>
+                            <td><span class="workout-type type-strength">Strength</span></td>
+                            <td>60 min</td>
+                            <td>380 kcal</td>
+                            <td>Yesterday, 6:00 PM</td>
+                        </tr>
+                        <tr>
+                            <td>Evening Yoga</td>
+                            <td><span class="workout-type type-yoga">Yoga</span></td>
+                            <td>30 min</td>
+                            <td>180 kcal</td>
+                            <td>Yesterday, 8:00 PM</td>
+                        </tr>
+                        <tr>
+                            <td>HIIT Session</td>
+                            <td><span class="workout-type type-cardio">Cardio</span></td>
+                            <td>35 min</td>
+                            <td>450 kcal</td>
+                            <td>May 20, 6:30 PM</td>
+                        </tr>
+                        <tr>
+                            <td>Back & Biceps</td>
+                            <td><span class="workout-type type-strength">Strength</span></td>
+                            <td>55 min</td>
+                            <td>320 kcal</td>
+                            <td>May 19, 7:00 PM</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Activity Goals</h2>
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <div class="activity-goals">
+                    <div class="goal-card">
+                        <h3>Daily Steps</h3>
+                        <div class="progress-container">
+                            <div class="progress-bar progress-steps">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span>12,548 / 15,000</span>
+                                <span>75%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goal-card">
+                        <h3>Calories Burned</h3>
+                        <div class="progress-container">
+                            <div class="progress-bar progress-calories">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span>1,850 / 3,000</span>
+                                <span>60%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goal-card">
+                        <h3>Active Minutes</h3>
+                        <div class="progress-container">
+                            <div class="progress-bar progress-minutes">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span>85 / 100 min</span>
+                                <span>85%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goal-card">
+                        <h3>Weight Loss</h3>
+                        <div class="progress-container">
+                            <div class="progress-bar progress-weight">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span>4 / 10 lbs</span>
+                                <span>40%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Weekly Activity Chart
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            const activityChart = new Chart(activityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Active Minutes',
+                        data: [45, 60, 50, 75, 55, 90, 65],
+                        backgroundColor: 'rgba(67, 97, 238, 0.7)',
+                        borderColor: 'rgba(67, 97, 238, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Heart Rate Chart
+            const heartRateCtx = document.getElementById('heartRateChart').getContext('2d');
+            const heartRateChart = new Chart(heartRateCtx, {
+                type: 'line',
+                data: {
+                    labels: ['6 AM', '9 AM', '12 PM', '3 PM', '6 PM', '9 PM', '12 AM'],
+                    datasets: [{
+                        label: 'Heart Rate (bpm)',
+                        data: [65, 72, 68, 75, 128, 78, 70],
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            min: 60,
+                            max: 140,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Add interactivity to workout history
+            const historyRows = document.querySelectorAll('.history-table tbody tr');
+            historyRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                });
+            });
+
+            // Update stats every 5 seconds (demo purposes)
+            setInterval(() => {
+                const steps = document.querySelector('.stat-card:nth-child(2) .stat-value');
+                const currentSteps = parseInt(steps.textContent.replace(/,/g, ''));
+                steps.textContent = (currentSteps + 15).toLocaleString();
+                
+                const calories = document.querySelector('.stat-card:nth-child(1) .stat-value');
+                const currentCalories = parseInt(calories.textContent);
+                calories.textContent = (currentCalories + 1);
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

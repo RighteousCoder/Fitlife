@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Achievements</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4a6cf7;
+            --secondary: #6c5ce7;
+            --accent: #00b894;
+            --dark: #2d3436;
+            --light: #f7f9fc;
+            --card-bg: #ffffff;
+            --border: #e0e6ef;
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --bronze: #cd7f32;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            background: linear-gradient(135deg, #e4edf5 0%, #f5f7fa 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+            color: var(--primary);
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 12px 25px;
+            border-radius: 50px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-title i {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .icon-1 {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+        }
+
+        .icon-2 {
+            background: linear-gradient(45deg, #a1c4fd, #c2e9fb);
+        }
+
+        .icon-3 {
+            background: linear-gradient(45deg, #ffecd2, #fcb69f);
+        }
+
+        .icon-4 {
+            background: linear-gradient(45deg, #84fab0, #8fd3f4);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-title {
+            font-size: 1.1rem;
+            color: #636e72;
+        }
+
+        .achievements-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 992px) {
+            .achievements-section {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .badges-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 25px;
+        }
+
+        .badge-card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 20px 15px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .badge-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .badge-icon.gold {
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            color: #8B7500;
+        }
+
+        .badge-icon.silver {
+            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+            color: #696969;
+        }
+
+        .badge-icon.bronze {
+            background: linear-gradient(135deg, #CD7F32, #A67B5B);
+            color: #5D4037;
+        }
+
+        .badge-icon.blue {
+            background: linear-gradient(135deg, #4a6cf7, #3a56d5);
+            color: white;
+        }
+
+        .badge-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .badge-desc {
+            font-size: 0.9rem;
+            color: #636e72;
+        }
+
+        .progress-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .milestone {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .milestone:last-child {
+            border-bottom: none;
+        }
+
+        .milestone-icon {
+            min-width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .milestone-info {
+            flex: 1;
+        }
+
+        .milestone-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e0e6ef;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .progress-1 {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            width: 85%;
+        }
+
+        .progress-2 {
+            background: linear-gradient(to right, var(--accent), #00ce9d);
+            width: 65%;
+        }
+
+        .progress-3 {
+            background: linear-gradient(to right, #ff7675, #ff5252);
+            width: 45%;
+        }
+
+        .progress-4 {
+            background: linear-gradient(to right, #fdcb6e, #ffb142);
+            width: 30%;
+        }
+
+        .recent-activity {
+            margin-top: 40px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            background: var(--light);
+        }
+
+        .activity-icon {
+            min-width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .activity-desc {
+            color: #636e72;
+            font-size: 0.95rem;
+        }
+
+        .activity-time {
+            color: #b2bec3;
+            font-size: 0.85rem;
+        }
+
+        .motivational-quote {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin-top: 25px;
+            text-align: center;
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #636e72;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <h1>FitTracker</h1>
+            </div>
+            <div class="user-info">
+                <div class="user-img">AM</div>
+                <div>
+                    <div class="user-name">Alex Morgan</div>
+                    <div class="user-level">Fitness Level: Advanced</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-nav">
+            <div class="nav-item"><i class="fas fa-home"></i> Dashboard</div>
+            <div class="nav-item"><i class="fas fa-running"></i> Activity</div>
+            <div class="nav-item"><i class="fas fa-dumbbell"></i> Workouts</div>
+            <div class="nav-item"><i class="fas fa-apple-alt"></i> Nutrition</div>
+            <div class="nav-item"><i class="fas fa-chart-line"></i> Body Stats</div>
+            <div class="nav-item active"><i class="fas fa-trophy"></i> Achievements</div>
+            <div class="nav-item"><i class="fas fa-cog"></i> Settings</div>
+        </div>
+
+        <div class="page-title">
+            <i class="fas fa-trophy"></i>
+            <div>
+                <h2>Your Achievements</h2>
+                <p>Track your progress and celebrate your milestones</p>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon icon-1">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div class="stat-value">28</div>
+                <div class="stat-title">Badges Earned</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon icon-2">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="stat-value">15/24</div>
+                <div class="stat-title">Milestones Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon icon-3">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-value">86,540</div>
+                <div class="stat-title">Total Calories Burned</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon icon-4">
+                    <i class="fas fa-shoe-prints"></i>
+                </div>
+                <div class="stat-value">1.2M</div>
+                <div class="stat-title">Total Steps</div>
+            </div>
+        </div>
+
+        <div class="achievements-section">
+            <div class="badges-container">
+                <div class="section-header">
+                    <h3>Your Badges</h3>
+                    <div class="filter">
+                        <select class="form-control">
+                            <option>All Badges</option>
+                            <option>Recently Earned</option>
+                            <option>Gold Badges</option>
+                            <option>Silver Badges</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="badges-grid">
+                    <div class="badge-card">
+                        <div class="badge-icon gold">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <div class="badge-title">Marathon Runner</div>
+                        <div class="badge-desc">Run 100 miles</div>
+                    </div>
+                    <div class="badge-card">
+                        <div class="badge-icon silver">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="badge-title">Strength Master</div>
+                        <div class="badge-desc">Lift 10,000 kg</div>
+                    </div>
+                    <div class="badge-card">
+                        <div class="badge-icon bronze">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="badge-title">Calorie Burner</div>
+                        <div class="badge-desc">Burn 10,000 cal</div>
+                    </div>
+                    <div class="badge-card">
+                        <div class="badge-icon blue">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="badge-title">Consistency King</div>
+                        <div class="badge-desc">30 consecutive days</div>
+                    </div>
+                    <div class="badge-card">
+                        <div class="badge-icon gold">
+                            <i class="fas fa-mountain"></i>
+                        </div>
+                        <div class="badge-title">Altitude Master</div>
+                        <div class="badge-desc">Climb 10,000 ft</div>
+                    </div>
+                    <div class="badge-card">
+                        <div class="badge-icon silver">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="badge-title">Heart Healthy</div>
+                        <div class="badge-desc">30 days HR tracking</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="section-header">
+                    <h3>Milestones</h3>
+                </div>
+                <div class="milestones">
+                    <div class="milestone">
+                        <div class="milestone-icon">
+                            <i class="fas fa-shoe-prints"></i>
+                        </div>
+                        <div class="milestone-info">
+                            <div class="milestone-title">
+                                <span>1,000,000 Steps</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress progress-1"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="milestone-info">
+                            <div class="milestone-title">
+                                <span>100,000 Calories</span>
+                                <span>65%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress progress-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="milestone-info">
+                            <div class="milestone-title">
+                                <span>50 Workouts</span>
+                                <span>45%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress progress-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-icon">
+                            <i class="fas fa-weight"></i>
+                        </div>
+                        <div class="milestone-info">
+                            <div class="milestone-title">
+                                <span>Weight Goal</span>
+                                <span>30%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress progress-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <div class="section-header">
+                        <h3>Recent Achievements</h3>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-medal"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">New Badge Earned!</div>
+                                <div class="activity-desc">You earned the "Marathon Runner" badge</div>
+                                <div class="activity-time">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Milestone Reached!</div>
+                                <div class="activity-desc">You completed 500,000 steps</div>
+                                <div class="activity-time">1 day ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">New Record!</div>
+                                <div class="activity-desc">You burned 850 calories in one workout</div>
+                                <div class="activity-time">3 days ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="motivational-quote">
+                    "The only bad workout is the one that didn't happen."<br>
+                    - Unknown
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2023 FitTracker | Fitness Achievement Dashboard</p>
+        </footer>
+    </div>
+
+    <script>
+        // Handle badge hover effect
+        document.querySelectorAll('.badge-card').forEach(badge => {
+            badge.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+            });
+            
+            badge.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+                this.style.boxShadow = 'none';
+            });
+        });
+
+        // Simulate achievement notifications
+        function showAchievementNotification(title) {
+            alert(Achievement Unlocked: ${title}!);
+        }
+
+        // Set up navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Initialize with some animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats on load
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'opacity 0.5s, transform 0.5s';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 300);
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>

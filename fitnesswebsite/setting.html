@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness App Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4a6cf7;
+            --secondary: #6c5ce7;
+            --dark: #2d3436;
+            --light: #f7f9fc;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #ff7675;
+            --border: #e0e6ef;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        header p {
+            color: #636e72;
+            font-size: 1.1rem;
+        }
+
+        .settings-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .settings-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .setting-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .setting-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 18px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header i {
+            font-size: 1.4rem;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3436;
+            font-size: 1.05rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
+        }
+
+        .unit-toggle {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .toggle-option {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-option.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 18px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification i {
+            font-size: 1.8rem;
+            color: var(--success);
+        }
+
+        .notification-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #636e72;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-cog"></i> Fitness Settings</h1>
+            <p>Customize your fitness experience and preferences</p>
+        </header>
+
+        <div class="settings-container">
+            <!-- Profile Settings Card -->
+            <div class="setting-card">
+                <div class="card-header">
+                    <i class="fas fa-user"></i>
+                    <h2>Profile Settings</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" class="form-control" placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" class="form-control" placeholder="28">
+                    </div>
+                    <div class="form-group">
+                        <label for="height">Height</label>
+                        <div class="unit-toggle">
+                            <div class="toggle-option active" data-unit="cm">cm</div>
+                            <div class="toggle-option" data-unit="in">in</div>
+                        </div>
+                        <input type="number" id="height" class="form-control" placeholder="175">
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight</label>
+                        <div class="unit-toggle">
+                            <div class="toggle-option active" data-unit="kg">kg</div>
+                            <div class="toggle-option" data-unit="lb">lb</div>
+                        </div>
+                        <input type="number" id="weight" class="form-control" placeholder="72">
+                    </div>
+                    <div class="form-group">
+                        <label for="fitness-goal">Fitness Goal</label>
+                        <select id="fitness-goal" class="form-control">
+                            <option value="weight-loss">Weight Loss</option>
+                            <option value="muscle-gain">Muscle Gain</option>
+                            <option value="endurance">Endurance Training</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-outline">Reset</button>
+                        <button class="btn btn-primary">Save Profile</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preferences Card -->
+            <div class="setting-card">
+                <div class="card-header">
+                    <i class="fas fa-sliders-h"></i>
+                    <h2>Preferences</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Measurement Units</label>
+                        <div class="unit-toggle">
+                            <div class="toggle-option active" data-unit="metric">Metric (kg, cm)</div>
+                            <div class="toggle-option" data-unit="imperial">Imperial (lb, in)</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Theme</label>
+                        <div class="unit-toggle">
+                            <div class="toggle-option active" data-theme="light">Light Mode</div>
+                            <div class="toggle-option" data-theme="dark">Dark Mode</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Workout Difficulty</label>
+                        <div class="unit-toggle">
+                            <div class="toggle-option" data-difficulty="beginner">Beginner</div>
+                            <div class="toggle-option active" data-difficulty="intermediate">Intermediate</div>
+                            <div class="toggle-option" data-difficulty="advanced">Advanced</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Weekly Goal</label>
+                        <select id="weekly-goal" class="form-control">
+                            <option value="3">3 workouts/week</option>
+                            <option value="4" selected>4 workouts/week</option>
+                            <option value="5">5 workouts/week</option>
+                            <option value="6">6 workouts/week</option>
+                            <option value="7">Daily workouts</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification Settings Card -->
+            <div class="setting-card">
+                <div class="card-header">
+                    <i class="fas fa-bell"></i>
+                    <h2>Notifications</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                        <label>Workout Reminders</label>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                        <label>Goal Achievements</label>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                        <label>New Workout Suggestions</label>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                        <label>Weekly Progress Reports</label>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="reminder-time">Daily Reminder Time</label>
+                        <input type="time" id="reminder-time" class="form-control" value="18:00">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Privacy & Security Card -->
+            <div class="setting-card">
+                <div class="card-header">
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>Privacy & Security</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                        <label>Private Profile</label>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                        <label>Sync with Health App</label>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Data Sharing</label>
+                        <div class="unit-toggle">
+                            <div class="toggle-option active" data-sharing="minimal">Minimal</div>
+                            <div class="toggle-option" data-sharing="moderate">Moderate</div>
+                            <div class="toggle-option" data-sharing="full">Full</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Change Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="Enter new password">
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-outline">Export Data</button>
+                        <button class="btn btn-primary">Save Security</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2023 Fitness Tracker Pro | All settings are securely stored</p>
+        </footer>
+    </div>
+
+    <!-- Notification Element -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <div class="notification-text" id="notification-text">Settings saved successfully!</div>
+    </div>
+
+    <script>
+        // Toggle option selection
+        document.querySelectorAll('.toggle-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove active class from siblings
+                const parent = this.parentElement;
+                parent.querySelectorAll('.toggle-option').forEach(sibling => {
+                    sibling.classList.remove('active');
+                });
+                
+                // Add active to clicked
+                this.classList.add('active');
+                
+                // Show notification
+                let message = "Preference updated";
+                if(this.parentElement.classList.contains('unit-toggle')) {
+                    message = "Unit preference updated";
+                }
+                showNotification(message);
+            });
+        });
+
+        // Save buttons
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', function() {
+                const cardTitle = this.closest('.setting-card').querySelector('.card-header h2').textContent;
+                showNotification({cardTitle} );
+            });
+        });
+
+        // Show notification function
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Form input interactions
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.borderColor = '#4a6cf7';
+                this.style.boxShadow = '0 0 0 3px rgba(74, 108, 247, 0.2)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.borderColor = '#e0e6ef';
+                this.style.boxShadow = 'none';
+            });
+        });
+
+        // Initialize with some data
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('name').value = 'Alex Morgan';
+            document.getElementById('age').value = 32;
+            document.getElementById('height').value = 175;
+            document.getElementById('weight').value = 72;
+        });
+    </script>
+</body>
+</html>
