@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Goals Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #20bf6b;
+            --warning: #fa8231;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: var(--light);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><rect fill="rgba(255,255,255,0.05)" width="100" height="100"/></svg>');
+            background-size: 20px 20px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 2;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 20px;
+            color: #e0e0ff;
+            position: relative;
+            z-index: 2;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tab:hover, .tab.active {
+            background: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .goal-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .goal-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .goal-icon {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .goal-icon i {
+            font-size: 5rem;
+            color: var(--accent);
+        }
+
+        .goal-content {
+            padding: 20px;
+        }
+
+        .goal-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #ffd166;
+        }
+
+        .goal-content p {
+            color: #e0e0ff;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .exercises {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .exercises li {
+            margin-bottom: 8px;
+            color: #a0a0ff;
+        }
+
+        .progress-container {
+            margin: 15px 0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 5px;
+            width: 0%;
+            transition: width 1.5s ease;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-top: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: modalOpen 0.5s ease;
+        }
+
+        @keyframes modalOpen {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: #ffd166;
+            font-size: 1.8rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .modal-body h3 {
+            color: #ffd166;
+            margin: 15px 0 10px;
+            font-size: 1.3rem;
+        }
+
+        .modal-body ul {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        .modal-body li {
+            margin-bottom: 10px;
+            color: #e0e0ff;
+        }
+
+        .workout-plan {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .plan-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .plan-card h4 {
+            color: #4ecdc4;
+            margin-bottom: 10px;
+        }
+
+        .motivation {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            font-style: italic;
+            font-size: 1.3rem;
+            border-left: 5px solid var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .goals-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .workout-plan {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-dumbbell"></i>What We Offer</h1>
+        <p class="subtitle">Achieve your fitness goals with targeted workouts. Track your progress and transform your body!</p>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active">All Goals</div>
+            <div class="tab">Upper Body</div>
+            <div class="tab">Lower Body</div>
+            <div class="tab">Core</div>
+            <div class="tab">Fat Loss</div>
+        </div>
+
+        <div class="motivation">
+            "The only bad workout is the one that didn't happen."
+        </div>
+
+        <div class="goals-grid">
+            <!-- Muscle Building -->
+            <div class="goal-card">
+                <div class="goal-icon">
+                  <img src="muscles.jpg" alt="" style="height: 170px; width: 360px;">
+                </div>
+                <div class="goal-content">
+                    <h3>Build Muscle</h3>
+                    <p>Gain strength and size with targeted resistance training and proper nutrition.</p>
+                    <ul class="exercises">
+                        <li>Bench Press</li>
+                        <li>Deadlifts</li>
+                        <li>Squats</li>
+                        <li>Pull-ups</li>
+                    </ul>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 65%"></div>
+                        </div>
+                        <div class="stats">
+                            <span>Progress</span>
+                            <span>65%</span>
+                        </div>
+                    </div>
+                    <button class="btn view-details" data-goal="muscle">View Plan</button>
+                </div>
+            </div>
+
+            <!-- Slimmer Body -->
+            <div class="goal-card">
+                <div class="goal-icon">
+                    <i class="fas fa-running"></i>
+                </div>
+                <div class="goal-content">
+                    <h3>Slimmer Body</h3>
+                    <p>Reduce overall body fat through cardio and calorie control for a leaner physique.</p>
+                    <ul class="exercises">
+                        <li>Running/Jogging</li>
+                        <li>Cycling</li>
+                        <li>HIIT Workouts</li>
+                        <li>Swimming</li>
+                    </ul>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 40%"></div>
+                        </div>
+                        <div class="stats">
+                            <span>Progress</span>
+                            <span>40%</span>
+                        </div>
+                    </div>
+                    <button class="btn view-details" data-goal="slimmer">View Plan</button>
+                </div>
+            </div>
+
+            <!-- Flat Tummy -->
+            <div class="goal-card">
+                <div class="goal-icon">
+                    <i class="fas fa-apple-alt"></i>
+                </div>
+                <div class="goal-content">
+                    <h3>Flat Tummy</h3>
+                    <p>Target abdominal fat and strengthen core muscles for a flatter stomach.</p>
+                    <ul class="exercises">
+                        <li>Planks</li>
+                        <li>Russian Twists</li>
+                        <li>Leg Raises</li>
+                        <li>Mountain Climbers</li>
+                    </ul>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 30%"></div>
+                        </div>
+                        <div class="stats">
+                            <span>Progress</span>
+                            <span>30%</span>
+                        </div>
+                    </div>
+                    <button class="btn view-details" data-goal="tummy">View Plan</button>
+                </div>
+            </div>
+
+            <!-- Arm Fat Reduction -->
+            <div class="goal-card">
+                <div class="goal-icon">
+                    <i class="fas fa-hand-paper"></i>
+                </div>
+                <div class="goal-content">
+                    <h3>Reduce Arm Fat</h3>
+                    <p>Tone and define arms by reducing fat and building lean muscle.</p>
+                    <ul class="exercises">
+                        <li>Tricep Dips</li>
+                        <li>Bicep Curls</li>
+                        <li>Push-ups</li>
+                        <li>Arm Circles</li>
+                    </ul>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 55%"></div>
+                        </div>
+                        <div class="stats">
+                            <span>Progress</span>
+                            <span>55%</span>
+                        </div>
+                    </div>
+                    <button class="btn view-details" data-goal="arms">View Plan</button>
+                </div>
+            </div>
+
+            <!-- Thigh Fat Reduction -->
+            <div class="goal-card">
+                <div class="goal-icon">
+                    <i class="fas fa-walking"></i>
+                </div>
+                <div class="goal-content">
+                    <h3>Reduce Thigh Fat</h3>
+                    <p>Slim down thighs with targeted exercises and fat-burning cardio.</p>
+                    <ul class="exercises">
+                        <li>Squats</li>
+                        <li>Lunges</li>
+                        <li>Leg Press</li>
+                        <li>Step-ups</li>
+                    </ul>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 35%"></div>
+                        </div>
+                        <div class="stats">
+                            <span>Progress</span>
+                            <span>35%</span>
+                        </div>
+                    </div>
+                    <button class="btn view-details" data-goal="thighs">View Plan</button>
+                </div>
+            </div>
+
+            <!-- Abdomen Workout -->
+            <div class="goal-card">
+                <div class="goal-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="goal-content">
+                    <h3>Abdomen Definition</h3>
+                    <p>Develop strong, defined abdominal muscles with core-focused workouts.</p>
+                    <ul class="exercises">
+                        <li>Crunches</li>
+                        <li>Bicycle Kicks</li>
+                        <li>Hanging Leg Raises</li>
+                        <li>Ab Rollouts</li>
+                    </ul>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 50%"></div>
+                        </div>
+                        <div class="stats">
+                            <span>Progress</span>
+                            <span>50%</span>
+                        </div>
+                    </div>
+                    <button class="btn view-details" data-goal="abdomen">View Plan</button>
+                </div>
+            </div>
+
+            <!-- Hips and Butt Enlargement -->
+            <div class="goal-card">
+                <div class="goal-icon">
+                    <i class="fas fa-chess-queen"></i>
+                </div>
+                <div class="goal-content">
+                    <h3>Hips & Butt Enlargement</h3>
+                    <p>Build glute muscles and enhance hip shape for a curvier lower body.</p>
+                    <ul class="exercises">
+                        <li>Hip Thrusts</li>
+                        <li>Glute Bridges</li>
+                        <li>Donkey Kicks</li>
+                        <li>Sumo Squats</li>
+                    </ul>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 70%"></div>
+                        </div>
+                        <div class="stats">
+                            <span>Progress</span>
+                            <span>70%</span>
+                        </div>
+                    </div>
+                    <button class="btn view-details" data-goal="hips">View Plan</button>
+                </div>
+            </div>
+
+            <!-- Hourglass Workout -->
+            <div class="goal-card">
+                <div class="goal-icon">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div class="goal-content">
+                    <h3>Hourglass Figure</h3>
+                    <p>Create balanced proportions with waist-cinching and hip-enhancing exercises.</p>
+                    <ul class="exercises">
+                        <li>Waist Training</li>
+                        <li>Side Planks</li>
+                        <li>Hip Abduction</li>
+                        <li>Russian Twists</li>
+                    </ul>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 45%"></div>
+                        </div>
+                        <div class="stats">
+                            <span>Progress</span>
+                            <span>45%</span>
+                        </div>
+                    </div>
+                    <button class="btn view-details" data-goal="hourglass">View Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for workout details -->
+    <div class="modal" id="workoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Workout Plan</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('workoutModal');
+        const closeBtn = document.querySelector('.close-btn');
+        const viewButtons = document.querySelectorAll('.view-details');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+
+        // Close modal
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Workout plans data
+        const workoutPlans = {
+            muscle: {
+                title: "Muscle Building Plan",
+                description: "This 4-week plan focuses on progressive overload to build muscle mass and strength.",
+                exercises: [
+                    "Bench Press: 4 sets of 6-8 reps",
+                    "Barbell Rows: 4 sets of 8 reps",
+                    "Overhead Press: 3 sets of 8-10 reps",
+                    "Barbell Squats: 4 sets of 6-8 reps",
+                    "Deadlifts: 3 sets of 5 reps",
+                    "Pull-ups: 3 sets to failure"
+                ],
+                schedule: "Monday: Chest & Back, Wednesday: Legs, Friday: Shoulders & Arms",
+                nutrition: "High protein diet (1.6-2.2g per kg body weight), calorie surplus of 300-500 calories"
+            },
+            slimmer: {
+                title: "Slimmer Body Plan",
+                description: "This plan combines cardio and strength training to help you achieve a leaner physique.",
+                exercises: [
+                    "Running: 30-45 minutes at moderate pace",
+                    "HIIT Workouts: 20 minutes, 3 times per week",
+                    "Full-body Circuit Training: 3 times per week",
+                    "Swimming: 45 minutes, 2 times per week"
+                ],
+                schedule: "Monday: Cardio, Tuesday: Strength, Thursday: Cardio, Saturday: Full-body",
+                nutrition: "Calorie deficit of 500 calories per day, high protein, moderate carbs"
+            },
+            tummy: {
+                title: "Flat Tummy Plan",
+                description: "Target your core and reduce abdominal fat with this comprehensive plan.",
+                exercises: [
+                    "Planks: 3 sets of 45-60 seconds",
+                    "Russian Twists: 3 sets of 20 reps",
+                    "Bicycle Crunches: 3 sets of 15 reps per side",
+                    "Leg Raises: 3 sets of 15 reps",
+                    "Mountain Climbers: 3 sets of 30 seconds"
+                ],
+                schedule: "Daily core exercises combined with cardio 4 times per week",
+                nutrition: "Reduce processed foods, increase fiber intake, stay hydrated"
+            },
+            arms: {
+                title: "Arm Fat Reduction Plan",
+                description: "Tone and define your arms with targeted exercises and fat-burning cardio.",
+                exercises: [
+                    "Tricep Dips: 3 sets of 12-15 reps",
+                    "Bicep Curls: 3 sets of 12 reps",
+                    "Push-ups: 3 sets to failure",
+                    "Overhead Tricep Extension: 3 sets of 15 reps",
+                    "Arm Circles: 3 sets of 1 minute"
+                ],
+                schedule: "Tuesday & Friday: Arm workouts, Monday & Thursday: Cardio",
+                nutrition: "Calorie deficit, adequate protein to maintain muscle mass"
+            },
+            thighs: {
+                title: "Thigh Fat Reduction Plan",
+                description: "Slim down your thighs with targeted lower body exercises and fat loss strategies.",
+                exercises: [
+                    "Squats: 4 sets of 15 reps",
+                    "Lunges: 3 sets of 12 reps per leg",
+                    "Leg Press: 3 sets of 15 reps",
+                    "Step-ups: 3 sets of 12 reps per leg",
+                    "Inner Thigh Leg Lifts: 3 sets of 20 reps"
+                ],
+                schedule: "Monday & Thursday: Lower body, Wednesday & Saturday: Cardio",
+                nutrition: "Calorie-controlled diet with emphasis on lean proteins and vegetables"
+            },
+            abdomen: {
+                title: "Abdomen Definition Plan",
+                description: "Develop strong, defined abdominal muscles with this core-focused plan.",
+                exercises: [
+                    "Hanging Leg Raises: 3 sets of 12 reps",
+                    "Cable Crunches: 3 sets of 15 reps",
+                    "Ab Wheel Rollouts: 3 sets of 10 reps",
+                    "Plank Variations: 3 sets of 60 seconds",
+                    "Oblique Crunches: 3 sets of 20 reps per side"
+                ],
+                schedule: "Core exercises daily, full workouts 4 times per week",
+                nutrition: "Reduce body fat percentage to reveal abdominal muscles"
+            },
+            hips: {
+                title: "Hips & Butt Enlargement Plan",
+                description: "Build glute muscles and enhance hip shape for a curvier lower body.",
+                exercises: [
+                    "Barbell Hip Thrusts: 4 sets of 10-12 reps",
+                    "Glute Bridges: 3 sets of 15 reps",
+                    "Romanian Deadlifts: 3 sets of 12 reps",
+                    "Donkey Kicks: 3 sets of 15 reps per leg",
+                    "Sumo Squats: 4 sets of 12 reps"
+                ],
+                schedule: "Monday: Glutes, Wednesday: Glutes & Hamstrings, Friday: Full Lower Body",
+                nutrition: "Calorie surplus with emphasis on protein for muscle growth"
+            },
+            hourglass: {
+                title: "Hourglass Figure Plan",
+                description: "Create balanced proportions with waist-cinching and hip-enhancing exercises.",
+                exercises: [
+                    "Waist Training: 30 minutes daily",
+                    "Side Planks: 3 sets of 45 seconds per side",
+                    "Hip Abduction: 3 sets of 20 reps",
+                    "Russian Twists: 3 sets of 20 reps",
+                    "Glute Bridges: 3 sets of 15 reps"
+                ],
+                schedule: "Daily waist exercises, glutes 3 times per week, cardio 4 times per week",
+                nutrition: "Balanced diet to reduce waist while building hips and glutes"
+            }
+        };
+
+        // Show modal with workout details
+        viewButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const goal = button.getAttribute('data-goal');
+                const plan = workoutPlans[goal];
+                
+                modalTitle.textContent = plan.title;
+                
+                modalBody.innerHTML = `
+                    <p>${plan.description}</p>
+                    <h3>Key Exercises:</h3>
+                    <ul>
+                        ${plan.exercises.map(ex => <li>${ex}</li>).join('')}
+                    </ul>
+                    
+                    <div class="workout-plan">
+                        <div class="plan-card">
+                            <h4><i class="fas fa-calendar-alt"></i> Schedule</h4>
+                            <p>${plan.schedule}</p>
+                        </div>
+                        <div class="plan-card">
+                            <h4><i class="fas fa-utensils"></i> Nutrition</h4>
+                            <p>${plan.nutrition}</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Tips for Success:</h3>
+                    <ul>
+                        <li>Consistency is key - stick to your schedule</li>
+                        <li>Track your progress with measurements and photos</li>
+                        <li>Get adequate sleep for recovery</li>
+                        <li>Stay hydrated throughout the day</li>
+                        <li>Listen to your body and adjust as needed</li>
+                    </ul>
+                `;
+                
+                modal.style.display = 'flex';
+            });
+        });
+
+        // Animate progress bars on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBars = document.querySelectorAll('.progress');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const width = entry.target.style.width;
+                        entry.target.style.width = '0%';
+                        setTimeout(() => {
+                            entry.target.style.width = width;
+                        }, 300);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            progressBars.forEach(bar => {
+                observer.observe(bar);
+            });
+        });
+    </script>
+</body>
+</html>
